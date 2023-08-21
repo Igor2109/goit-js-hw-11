@@ -1,3 +1,4 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -19,14 +20,25 @@ function onload() {
 }
 
 //search form
+// function onSubmitSearch(e) {
+//   e.preventDefault();
+//   value = e.currentTarget.elements.searchQuery.value.trim();
+//   if (!value) {
+//     message('Please write correct data!');
+//     return;
+//   }
+
+//   clearGallery();
+//   getImage();
+// }
 function onSubmitSearch(e) {
   e.preventDefault();
   value = e.currentTarget.elements.searchQuery.value.trim();
   if (!value) {
     message('Please write correct data!');
+
     return;
   }
-
   clearGallery();
   getImage();
 }
@@ -39,7 +51,10 @@ async function getImage() {
     lightbox.refresh();
 
     if (resp.total === 0) {
-      message('Please write correct data!');
+      message(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+
       return;
     }
     totalHitsImg += resp.hits.length;
@@ -49,6 +64,7 @@ async function getImage() {
         'Were sorry, but you ve reached the end of search results.';
       return;
     }
+
     if (totalHitsImg > 40) {
       const { height: cardHeight } =
         refs.galleryEl.firstElementChild.getBoundingClientRect();
@@ -94,4 +110,5 @@ function clearGallery() {
   currentPage = 1;
   refs.spanEl.innerHTML = '';
   refs.galleryEl.innerHTML = '';
+  refs.formEl.reset();
 }
